@@ -1,0 +1,18 @@
+
+---
+
+## 🛠️ Technologies Used
+
+- **Language:** C++17
+- **Compiler:** g++ / clang++
+- **Platform:** Windows / Linux / macOS
+- **IDE (optional):** VS Code / CLion / Code::Blocks
+
+---
+
+## 🎮 How to Compile & Run
+
+### Step 1: Compile
+
+```bash
+g++ -o bank bank_system.cpp
