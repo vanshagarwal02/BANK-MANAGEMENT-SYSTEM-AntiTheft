@@ -57,6 +57,36 @@ public:
 };
 
 
+// AML Red Flags
+class AMLChecker {
+public:
+    static bool isLargeDeposit(double amt) {
+        return amt > 50000;
+    }
+    static bool isGhostAccount(const Account& acc) {
+        return (acc.getBalance() > 100000) && (acc.getName().empty() || acc.getAge() == 0);
+    }
+    static bool isFrequentTransactions(const vector<Transaction>& txs) {
+        if (txs.size() < 11) return false;
+        time_t now = time(0);
+        int count = 0;
+        for (auto it = txs.rbegin(); it != txs.rend(); ++it) {
+            struct tm tm = {};
+            strptime(it->getDate().c_str(), "%a %b %d %H:%M:%S %Y", &tm);
+            time_t t = mktime(&tm);
+            if (difftime(now, t) <= 60) count++;
+            if (count > 10) return true;
+        }
+        return false;
+    }
+    static bool isCircularBehavior(const vector<Transaction>& txs) {
+        if (txs.size() < 2) return false;
+        const Transaction& last = txs[txs.size()-1];
+        const Transaction& prev = txs[txs.size()-2];
+        return (last.getType() == "Withdraw" && prev.getType() == "Deposit" && last.getDate() == prev.getDate());
+    }
+};
+
 void Account::deposit(double amt){
     balance += amt;
     addTransaction("Deposit", amt);
